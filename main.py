@@ -40,7 +40,7 @@ def parse_args():
 def main():
     args = parse_args()
     
-    # Initialize the Text2Panorama model
+    # Initialize the Text-to-Panorama model
     text2pano = Text2Panorama(use_depth=args.use_depth,
                               depth_map_dir=args.depth_map,
                               upscale=args.upscale)

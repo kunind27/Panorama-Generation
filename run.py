@@ -62,7 +62,7 @@ class Text2Panorama:
         
         # Inpainting model to correct seams
         model_card = "diffusers/stable-diffusion-xl-1.0-inpainting-0.1"
-        model_card = 'stabilityai/stable-diffusion-2-inpainting'
+        if not self.use_depth: model_card = 'stabilityai/stable-diffusion-2-inpainting'
         self.pipe_inpaint = AutoPipelineForInpainting.from_pretrained(
             model_card,
             torch_dtype=torch.float16,
@@ -240,7 +240,7 @@ class Text2Panorama:
 # Usage example
 if __name__ == "__main__":
     generator = Text2Panorama(use_depth=True, depth_map_dir="pano_depth.png", upscale=True)
-    prompt = "science lab"
+    prompt = "sci-fi cryo pod"
     save_dir = "results_depth_control" if generator.use_depth else "results"
     save_dir = osp.join(save_dir, prompt)
     output_path = generator.generate(prompt, seed=42, save_dir=save_dir)
