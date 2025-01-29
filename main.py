@@ -42,7 +42,8 @@ def main():
     
     # Initialize the Text2Panorama model
     text2pano = Text2Panorama(use_depth=args.use_depth,
-                              depth_map_dir=args.depth_map)
+                              depth_map_dir=args.depth_map,
+                              upscale=args.upscale)
 
     # Initialize Save Directory
     save_dir = args.save_dir
@@ -53,7 +54,6 @@ def main():
     # Generate the panorama
     result = text2pano.generate(prompt=args.prompt,
                                 seed=args.seed,
-                                upscale=args.upscale,
                                 save_dir=save_dir)
     print(f"Panorama generated successfully at: {result}")
 

@@ -16,7 +16,7 @@ from typing import Optional, Tuple
 class Text2Panorama:
     """A class to generate panoramic images from text descriptions using SDXL."""
     
-    def __init__(self, use_depth: bool = False, depth_map_dir: Optional[str] = "pano_depth.png"):
+    def __init__(self, use_depth: bool = False, depth_map_dir: Optional[str] = "pano_depth.png", upscale: bool = False):
         """Initialize the Text2Panorama pipeline.
         
         Args:
@@ -25,6 +25,7 @@ class Text2Panorama:
         """
         self.use_depth = use_depth
         self.depth_map = Image.open(depth_map_dir) if depth_map_dir and self.use_depth else None
+        self.upscale = upscale
 
         # Base SDXL model (with optional depth control)
         self.pipe = None
@@ -60,8 +61,10 @@ class Text2Panorama:
 
         
         # Inpainting model to correct seams
+        model_card = "diffusers/stable-diffusion-xl-1.0-inpainting-0.1"
+        model_card = 'stabilityai/stable-diffusion-2-inpainting'
         self.pipe_inpaint = AutoPipelineForInpainting.from_pretrained(
-            "stabilityai/stable-diffusion-xl-base-1.0",
+            model_card,
             torch_dtype=torch.float16,
             variant="fp16",
         ).to("cuda")
@@ -170,10 +173,10 @@ class Text2Panorama:
         Returns:
             Inpainted image
         """
-        divisions = 10 if self.use_depth else 6
+        divisions = 4 if self.use_depth else 6
         mask_image = self.create_mask(*image.size, divisions)
         return self.pipe_inpaint(
-            prompt=f"{prompt}, high quality, photorealistic, seamless continuation, consistent lighting and color, detailed texture, sharp focus",
+            prompt=f"{prompt}, high quality, photorealistic, seamless continuation, consistent lighting and color, sharp focus",
             negative_prompt="artifacts, blurry, distorted, seams, edges, inconsistent lighting, color mismatch, filtered look",
             image=image,
             mask_image=mask_image,
@@ -185,7 +188,7 @@ class Text2Panorama:
             height=image.size[1]
         ).images[0]
 
-    def generate(self, prompt: str, seed: Optional[int] = None, upscale: bool = True, save_dir: str = "") -> str:
+    def generate(self, prompt: str, seed: Optional[int] = None, save_dir: str = "") -> str:
         """Generate a panoramic image from a text prompt.
         
         Args:
@@ -207,7 +210,7 @@ class Text2Panorama:
         # Generate initial panorama
         image = self._generate_initial_panorama(prompt, seed)
         image.save(osp.join(save_dir, "1-base.png"))
-        if upscale:
+        if self.upscale:
             image = self._upscale_image(image, prompt, seed)
             image.save(osp.join(save_dir, "3-upscaled.png"))
 
@@ -236,9 +239,9 @@ class Text2Panorama:
 
 # Usage example
 if __name__ == "__main__":
-    generator = Text2Panorama(use_depth=True, depth_map_dir="pano_depth.png")
-    prompt = "tron world"
+    generator = Text2Panorama(use_depth=True, depth_map_dir="pano_depth.png", upscale=True)
+    prompt = "science lab"
     save_dir = "results_depth_control" if generator.use_depth else "results"
     save_dir = osp.join(save_dir, prompt)
-    output_path = generator.generate(prompt, seed=42, upscale=False, save_dir=save_dir)
+    output_path = generator.generate(prompt, seed=42, save_dir=save_dir)
     print(f"Generated panorama saved to: {output_path}")
