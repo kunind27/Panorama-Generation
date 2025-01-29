@@ -61,7 +61,7 @@ class Text2Panorama:
         
         # Inpainting model to correct seams
         self.pipe_inpaint = AutoPipelineForInpainting.from_pretrained(
-            "stabilityai/stable-diffusion-2-inpainting",
+            "stabilityai/stable-diffusion-xl-base-1.0",
             torch_dtype=torch.float16,
             variant="fp16",
         ).to("cuda")
@@ -72,25 +72,6 @@ class Text2Panorama:
             torch_dtype=torch.float16,
             variant="fp16",
         ).to("cuda")
-
-    def create_mask(self, width: int, height: int, divisions: int) -> Image.Image:
-        """Create a mask image with a white rectangle in the middle.
-        
-        Args:
-            width: Width of the mask
-            height: Height of the mask
-            divisions: Number of divisions for the mask width
-            
-        Returns:
-            The created mask image
-        """
-        image = Image.new("RGB", (width, height), "black")
-        left = width // divisions
-        right = width // divisions * (divisions - 1)
-        draw = ImageDraw.Draw(image)
-        draw.rectangle([left, 0, right, height], fill="white")
-        image.save('mask.png')
-        return image
 
     def _generate_initial_panorama(self, prompt: str, seed: int) -> Image.Image:
         """Generate initial Panorama by prompting SD-XL (it may have a seam in the middle).
@@ -158,6 +139,25 @@ class Text2Panorama:
         image.paste(right_half, (0, 0))
         image.paste(left_half, (midpoint, 0))
         return image
+    
+    def create_mask(self, width: int, height: int, divisions: int) -> Image.Image:
+        """Create a mask image with a white rectangle in the middle.
+        
+        Args:
+            width: Width of the mask
+            height: Height of the mask
+            divisions: Number of divisions for the mask width
+            
+        Returns:
+            The created mask image
+        """
+        image = Image.new("RGB", (width, height), "black")
+        left = width // divisions
+        right = width // divisions * (divisions - 1)
+        draw = ImageDraw.Draw(image)
+        draw.rectangle([left, 0, right, height], fill="white")
+        image.save('mask.png')
+        return image
 
     def _inpaint_seam(self, image: Image.Image, prompt: str, seed: int) -> Image.Image:
         """Inpaint the seam in the middle of the image.
@@ -170,7 +170,7 @@ class Text2Panorama:
         Returns:
             Inpainted image
         """
-        divisions = 8 if self.use_depth else 6
+        divisions = 10 if self.use_depth else 6
         mask_image = self.create_mask(*image.size, divisions)
         return self.pipe_inpaint(
             prompt=f"{prompt}, high quality, photorealistic, seamless continuation, consistent lighting and color, detailed texture, sharp focus",
@@ -236,9 +236,9 @@ class Text2Panorama:
 
 # Usage example
 if __name__ == "__main__":
-    generator = Text2Panorama()
-    prompt = "science lab"
+    generator = Text2Panorama(use_depth=True, depth_map_dir="pano_depth.png")
+    prompt = "tron world"
     save_dir = "results_depth_control" if generator.use_depth else "results"
     save_dir = osp.join(save_dir, prompt)
-    output_path = generator.generate(prompt, seed=0, upscale=False, save_dir=save_dir)
+    output_path = generator.generate(prompt, seed=42, upscale=False, save_dir=save_dir)
     print(f"Generated panorama saved to: {output_path}")
