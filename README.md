@@ -10,7 +10,10 @@
 
 ---
 
+> **Note**: The detailed methodology and motivation behind this implementation can be found in the [Assignment Report](./Kunind_Sahu_Text2Panorama.pdf).
+
 ## 🚀 Setup
+
 
 ```bash
 # Create conda environment
