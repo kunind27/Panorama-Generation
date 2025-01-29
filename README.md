@@ -4,7 +4,7 @@
 
 ### Text-to-panorama generation tool using SDXL (Stable Diffusion XL)
 
-[Setup](#setup) • [Usage](#usage) • [Parameters](#parameters) • [Project Structure](#project-structure) • [Results](#results)
+[Setup](#-setup) • [Usage](#-usage) • [Parameters](#%EF%B8%8F-parameters) • [Project Structure](#-project-structure) • [Results](#-results)
 
 </div>
 
