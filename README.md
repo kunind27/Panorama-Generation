@@ -22,7 +22,7 @@ pip install -r requirements.txt
 git clone https://github.com/replicate/cog-sdxl cog_sdxl
 ```
 
-> **Note**: `cog_sdxl` enables Textual Inversion on Stable Diffusion-XL (not natively supported in Diffusers). Use trigger tokens `<s0><s1>` in your prompts.
+> **Note**: `cog_sdxl` enables Textual Inversion on Stable Diffusion-XL (not natively supported in Diffusers). The trigger tokens are `<s0><s1>`. They are concatenated to your prompt during inference, so you only need to include the panorama subject in your prompt.
 
 ## 🎮 Usage
 
