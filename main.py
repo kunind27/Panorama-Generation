@@ -10,7 +10,7 @@ def parse_args():
                         required=True,
                         help="Text description of the desired panorama")
     
-    parser.add_argument("--use-depth", '-d',
+    parser.add_argument("--use-depth",
                         action="store_true",
                         help="Enable depth-controlled generation")
     
@@ -19,7 +19,7 @@ def parse_args():
                         default="pano_depth.png",
                         help="Path to depth map image file (default: pano_depth.png)")
     
-    parser.add_argument("--seed", '-s',
+    parser.add_argument("--seed",
                         type=int,
                         default=None,
                         help="Random seed for reproducibility")
@@ -31,7 +31,7 @@ def parse_args():
                               results will be saved in \'results\' or \'results_depth_control\'\
                                 based on depth control)")
     
-    parser.add_argument("--upscale", '-u',
+    parser.add_argument("--upscale",
                         action="store_true",
                         help="Enable 2x upscaling of the final result")
     
