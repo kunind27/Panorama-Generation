@@ -41,12 +41,14 @@ python main.py \
 - `--upscale:` To allow upscaling the Panorama
 
 ## Project Structure
+```
 ├── run.py                 # Core generation code
 ├── main.py                # CLI interface
 ├── requirements.txt       # Dependencies
 ├── pano_depth.png         # Given Depth Map
 ├── results/               # Output directory for Panorama Generation without Depth Control
 └── results_depth_control/ # Output directory for Panorama Generation with Depth Control
+```
 
 ## Results
 Generated panoramas will be saved in the specified output directory.
