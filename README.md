@@ -1,8 +1,16 @@
-# Panorama-Generation
+<div align="center">
 
-Text-to-panorama generation tool using SDXL (Stable Diffusion XL).
+# 🌅 Panorama-Generation
 
-## Setup
+### Text-to-panorama generation tool using SDXL (Stable Diffusion XL)
+
+[Setup](#setup) • [Usage](#usage) • [Parameters](#parameters) • [Project Structure](#project-structure) • [Results](#results)
+
+</div>
+
+---
+
+## 🚀 Setup
 
 ```bash
 # Create conda environment
@@ -13,15 +21,17 @@ conda activate panorama
 pip install -r requirements.txt
 git clone https://github.com/replicate/cog-sdxl cog_sdxl
 ```
-`cog_sdxl` allows us to use Textual Inversion on Stable Diffusion-XL which can't be done natively in Diffusers. The trigger tokens are `<s0><s1>`. They are concatenated to your prompt during inference, so you only need to include the panorama subject in your prompt.
 
-## Usage
-Basic:
+> **Note**: `cog_sdxl` enables Textual Inversion on Stable Diffusion-XL (not natively supported in Diffusers). Use trigger tokens `<s0><s1>` in your prompts.
+
+## 🎮 Usage
+
+### Basic
 ```bash
 python main.py --prompt "your description"
 ```
 
-Advanced:
+### Advanced
 ```bash
 python main.py \
     --prompt "sci-fi cryo pod" \
@@ -32,23 +42,31 @@ python main.py \
     --upscale
 ```
 
-## Parameters
-- `--prompt:` Text prompt for panorama generation (required)
-- `--use-depth:` Enable depth controlled panorama generation
-- `--depth-map:` Path to the depth map
-- `--seed:` Random seed
-- `--save-dir:` Directory to save generation outputs
-- `--upscale:` To allow upscaling the Panorama
+## ⚙️ Parameters
 
-## Project Structure
+| Parameter | Description |
+|-----------|-------------|
+| `--prompt` | Text prompt for panorama generation (required) |
+| `--use-depth` | Enable depth controlled panorama generation |
+| `--depth-map` | Path to the depth map |
+| `--seed` | Random seed |
+| `--save-dir` | Directory to save generation outputs |
+| `--upscale` | Enable panorama upscaling |
+
+## 📁 Project Structure
 ```
 ├── run.py                 # Core generation code
 ├── main.py                # CLI interface
 ├── requirements.txt       # Dependencies
 ├── pano_depth.png         # Given Depth Map
-├── results/               # Output directory for Panorama Generation without Depth Control
-└── results_depth_control/ # Output directory for Panorama Generation with Depth Control
+├── results/               # Output directory (without Depth Control)
+└── results_depth_control/ # Output directory (with Depth Control)
 ```
 
-## Results
+## 🎨 Results
 Generated panoramas will be saved in the specified output directory.
+
+---
+<div align="center">
+Made with ❤️ for panorama generation
+</div>
